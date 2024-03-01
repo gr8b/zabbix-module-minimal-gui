@@ -21,18 +21,18 @@ class Module extends CModule {
      * List of .css files to use on specific action/page
      */
     protected $action_css = [
-        "host/triggers.php"				=> "/public/host.triggers.php.css",
-        "template/triggers.php"			=> "/public/template.triggers.php.css",
-        "host/host_discovery.php"		=> "/public/host.host_discovery.php.css",
-        "template/host_discovery.php"	=> "/public/template.host_discovery.php.css",
-        "templates.php"					=> "/public/templates.php.css",
-        "items.php"						=> "/public/items.php.css",
-        "disc_prototypes.php"			=> "/public/disc_prototypes.php.css",
-        "graphs.php"					=> "/public/graphs.php.css",
-        "applications.php"				=> "/public/applications.php.css",
-        "trigger_prototypes.php"		=> "/public/trigger_prototypes.php.css",
-        "host.view"						=> "/public/host.view.css",
-        "hosts.php"						=> "/public/hosts.php.css"
+        "host/triggers.php"             => "/public/host.triggers.php.css",
+        "template/triggers.php"         => "/public/template.triggers.php.css",
+        "host/host_discovery.php"       => "/public/host.host_discovery.php.css",
+        "template/host_discovery.php"   => "/public/template.host_discovery.php.css",
+        "templates.php"                 => "/public/templates.php.css",
+        "items.php"                     => "/public/items.php.css",
+        "disc_prototypes.php"           => "/public/disc_prototypes.php.css",
+        "graphs.php"                    => "/public/graphs.php.css",
+        "applications.php"              => "/public/applications.php.css",
+        "trigger_prototypes.php"        => "/public/trigger_prototypes.php.css",
+        "host.view"                     => "/public/host.view.css",
+        "hosts.php"                     => "/public/hosts.php.css"
     ];
 
     protected $css_file = '';
