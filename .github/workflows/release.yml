@@ -1,0 +1,39 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Get SemVer version
+      id: semver
+      run: echo "::set-output name=version::$(git describe --tags --abbrev=0)"
+
+    - name: Build and package
+      run: |
+        # Release v{version}-zabbix-6.4-7.0.zip
+        zip -r "v${{ steps.semver.outputs.version }}-zabbix-6.4-7.0.zip" assets Module.php manifest.json
+
+        #  # Release v{version}-zabbix-5.0-6.2.zip
+        jq '.manifest_version = 1' manifest.json > manifest.json
+        zip -r "v${{ steps.semver.outputs.version }}-zabbix-5.0-6.2.zip" public Module.php manifest.json
+
+    - name: Upload release artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: zabbix-6.4-7.0
+        path: "v${{ steps.semver.outputs.version }}-zabbix-6.4-7.0.zip"
+
+    - name: Upload modified release artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: zabbix-5.0-6.2
+        path: "v${{ steps.semver.outputs.version }}-zabbix-5.0-6.2.zip"
