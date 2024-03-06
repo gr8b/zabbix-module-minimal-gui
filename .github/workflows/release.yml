@@ -32,8 +32,8 @@ jobs:
           latest_tag=$(git describe --abbrev=0 --tags 2>/dev/null || echo "none")
 
           if [ "$latest_tag" != "none" ]; then
-            commits="$(git log --oneline $latest_tag..)"
-            echo "notes=$commits" >> $GITHUB_ENV
+            commits=$(git log --oneline $latest_tag..)
+            printf "notes=%s" "$commits" >> $GITHUB_ENV
           else
             echo "No tags found, skipping release notes generation."
             echo "notes=" >> $GITHUB_ENV
