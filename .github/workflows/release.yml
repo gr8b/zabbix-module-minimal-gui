@@ -26,8 +26,14 @@ jobs:
       - name: Generate release notes
         id: releasenotes
         run: |
-          commits="$(git log --oneline $(git tag |tail -1)..)"
-          echo "notes=$commits" >> $GITHUB_ENV
+          latest_tag=$(git describe --abbrev=0 --tags)
+          if [ -n "$latest_tag" ]; then
+            commits=$(git log --oneline $latest_tag..)
+            echo "notes=$commits" >> $GITHUB_ENV
+          else
+            echo "No tags found, skipping release notes generation."
+            echo "notes=" >> $GITHUB_ENV
+          fi
 
       - name: Upload release artifacts
         uses: ncipollo/release-action@v1
