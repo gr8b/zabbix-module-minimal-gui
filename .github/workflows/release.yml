@@ -26,13 +26,13 @@ jobs:
       - name: Generate release notes
         id: releasenotes
         run: |
-          commits=$(git log --oneline $(git tag |tail -1)..)
+          commits="$(git log --oneline $(git tag |tail -1)..)"
           echo "notes=$commits" >> $GITHUB_ENV
 
       - name: Upload release artifacts
         uses: ncipollo/release-action@v1
         with:
-          tag: 1.1.1
+          tag: ${GITHUB_REF##*/}
           allowUpdates: true
           generateReleaseNotes: true
           artifacts: "v${GITHUB_REF##*/}-zabbix-6.4-7.0.zip,v${GITHUB_REF##*/}-zabbix-5.0-6.2.zip"
