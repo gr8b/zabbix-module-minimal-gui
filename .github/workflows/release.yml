@@ -14,18 +14,20 @@ jobs:
       - name: Build release 5.0-6.2
         run: |
           jq '.manifest_version = 1' manifest.json > manifest.json
+          echo "creating file v${GITHUB_REF##*/}-zabbix-5.0-6.2.zip"
           zip -r "v${GITHUB_REF##*/}-zabbix-5.0-6.2.zip" public Module.php manifest.json
 
       - name: Build release 6.4-7.0
         run: |
           jq '.manifest_version = 2' manifest.json > manifest.json
+          echo "creating file v${GITHUB_REF##*/}-zabbix-6.4-7.0.zip"
           zip -r "v${GITHUB_REF##*/}-zabbix-6.4-7.0.zip" assets Module.php manifest.json
 
       - name: Generate release notes
         id: releasenotes
         run: |
-          echo "notes=$(git log --oneline $(git tag |tail -1)..)" >> $GITHUB_ENV
-          echo "done."
+          commits=$(git log --oneline $(git tag |tail -1)..)
+          echo "notes=$commits" >> $GITHUB_ENV
 
       - name: Upload release artifacts
         uses: ncipollo/release-action@v1
