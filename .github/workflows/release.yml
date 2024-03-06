@@ -26,8 +26,9 @@ jobs:
       - name: Generate release notes
         id: releasenotes
         run: |
-          latest_tag=$(git describe --abbrev=0 --tags)
-          if [ -n "$latest_tag" ]; then
+          latest_tag=$(git describe --abbrev=0 --tags 2>/dev/null || echo "none")
+
+          if [ "$latest_tag" != "none" ]; then
             commits=$(git log --oneline $latest_tag..)
             echo "notes=$commits" >> $GITHUB_ENV
           else
@@ -39,6 +40,5 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           tag: ${GITHUB_REF##*/}
-          allowUpdates: true
           generateReleaseNotes: true
           artifacts: "v${GITHUB_REF##*/}-zabbix-6.4-7.0.zip,v${GITHUB_REF##*/}-zabbix-5.0-6.2.zip"
