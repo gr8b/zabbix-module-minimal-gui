@@ -10,30 +10,42 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Get SemVer version
-      id: semver
-      run: echo "version=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14'
 
-    - name: Build and package
-      run: |
-        # Release v{version}-zabbix-6.4-7.0.zip
-        zip -r "v${{ steps.semver.outputs.version }}-zabbix-6.4-7.0.zip" assets Module.php manifest.json
+      - name: Install dependencies
+        run: npm install --save-dev semantic-release
 
-        # Release v{version}-zabbix-5.0-6.2.zip
-        jq '.manifest_version = 1' manifest.json > manifest.json
-        zip -r "v${{ steps.semver.outputs.version }}-zabbix-5.0-6.2.zip" public Module.php manifest.json
+      - name: Run semantic-release
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Upload release 6.4-7.0 artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: zabbix-6.4-7.0
-        path: "v${{ steps.semver.outputs.version }}-zabbix-6.4-7.0.zip"
+      - name: Get SemVer version from package.json
+        id: semver
+        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
 
-    - name: Upload modified release 5.0-6.2 artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: zabbix-5.0-6.2
-        path: "v${{ steps.semver.outputs.version }}-zabbix-5.0-6.2.zip"
+      - name: Build and package
+        run: |
+          # Release v{version}-zabbix-6.4-7.0.zip
+          zip -r "v${{ steps.semver.outputs.version }}-zabbix-6.4-7.0.zip" assets Module.php manifest.json
+
+          # Release v{version}-zabbix-5.0-6.2.zip
+          jq '.manifest_version = 1' manifest.json > manifest.json
+          zip -r "v${{ steps.semver.outputs.version }}-zabbix-5.0-6.2.zip" public Module.php manifest.json
+
+      - name: Upload release artifacts to GitHub Releases
+        uses: actions/create-release@v1
+        with:
+          tag_name: v${{ steps.semver.outputs.version }}
+          release_name: Release v${{ steps.semver.outputs.version }}
+          body: Release notes for v${{ steps.semver.outputs.version }}
+          files:
+            - "v${{ steps.semver.outputs.version }}-zabbix-6.4-7.0.zip"
+            - "v${{ steps.semver.outputs.version }}-zabbix-5.0-6.2.zip"
+          token: ${{ secrets.GITHUB_TOKEN }}
