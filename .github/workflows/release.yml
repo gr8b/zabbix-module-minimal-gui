@@ -44,6 +44,5 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           tag: 1.1.1
-          generateReleaseNotes: true
-          body: "## Changes\n${{ steps.releasenotes.outputs.notes }}"
+          body: "## Changes\n${{ steps.releasenotes.outputs.notes }}\n\n"
           artifacts: "*-zabbix-6.4-7.0.zip,*-zabbix-5.0-6.2.zip"
