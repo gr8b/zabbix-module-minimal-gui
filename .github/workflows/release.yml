@@ -32,7 +32,5 @@ jobs:
         with:
           release_name: Release v${{ github.ref }}
           body: "Release notes for v${{ github.ref }}\nChangelog:\n${{ steps.releasenotes.outputs.notes }}"
-          files:
-            - "v${GITHUB_REF##*/}-zabbix-6.4-7.0.zip"
-            - "v${GITHUB_REF##*/}-zabbix-5.0-6.2.zip"
+          files: "v${GITHUB_REF##*/}-zabbix-6.4-7.0.zip v${GITHUB_REF##*/}-zabbix-5.0-6.2.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
