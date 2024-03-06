@@ -1,9 +1,7 @@
 name: Release
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   release:
@@ -13,39 +11,27 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '14'
-
-      - name: Install dependencies
-        run: npm install --save-dev semantic-release
-
-      - name: Run semantic-release
-        run: npx semantic-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Get SemVer version from package.json
-        id: semver
-        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
-
-      - name: Build and package
+      - name: Build release 5.0-6.2
         run: |
-          # Release v{version}-zabbix-6.4-7.0.zip
-          zip -r "v${{ steps.semver.outputs.version }}-zabbix-6.4-7.0.zip" assets Module.php manifest.json
-
-          # Release v{version}-zabbix-5.0-6.2.zip
           jq '.manifest_version = 1' manifest.json > manifest.json
-          zip -r "v${{ steps.semver.outputs.version }}-zabbix-5.0-6.2.zip" public Module.php manifest.json
+          zip -r "v${GITHUB_REF##*/}-zabbix-5.0-6.2.zip" public Module.php manifest.json
+
+      - name: Build release 6.4-7.0
+        run: |
+          jq '.manifest_version = 2' manifest.json > manifest.json
+          zip -r "v${GITHUB_REF##*/}-zabbix-6.4-7.0.zip" assets Module.php manifest.json
+
+      - name: Generate release notes
+        id: releasenotes
+        run: |
+          echo "notes=$(git log --oneline $(git tag |tail -1)..)" >> $GITHUB_ENV
 
       - name: Upload release artifacts to GitHub Releases
         uses: actions/create-release@v1
         with:
-          tag_name: v${{ steps.semver.outputs.version }}
-          release_name: Release v${{ steps.semver.outputs.version }}
-          body: Release notes for v${{ steps.semver.outputs.version }}
+          release_name: Release v${{ github.ref }}
+          body: "Release notes for v${{ github.ref }}\nChangelog:\n${{ steps.releasenotes.outputs.notes }}"
           files:
-            - "v${{ steps.semver.outputs.version }}-zabbix-6.4-7.0.zip"
-            - "v${{ steps.semver.outputs.version }}-zabbix-5.0-6.2.zip"
+            - "v${GITHUB_REF##*/}-zabbix-6.4-7.0.zip"
+            - "v${GITHUB_REF##*/}-zabbix-5.0-6.2.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
