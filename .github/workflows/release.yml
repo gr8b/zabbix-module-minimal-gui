@@ -45,4 +45,5 @@ jobs:
         with:
           tag: 1.1.1
           generateReleaseNotes: true
-          artifacts: "v${GITHUB_REF##*/}-zabbix-6.4-7.0.zip,v${GITHUB_REF##*/}-zabbix-5.0-6.2.zip"
+          body: "## Changes\n${{ steps.releasenotes.outputs.notes }}"
+          artifacts: "*-zabbix-6.4-7.0.zip,*-zabbix-5.0-6.2.zip"
