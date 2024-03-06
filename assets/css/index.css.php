@@ -1,6 +1,7 @@
 <?php
 
 $css = '';
+header('Content-Type: text/css', true);
 
 if ($_GET['page']??'') {
     $file = str_replace(['/', '.php'], '', $_GET['page']).'.css';
