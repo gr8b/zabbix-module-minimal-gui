@@ -43,6 +43,7 @@ jobs:
         run: |
           chmod +x .github/release-notes.sh
           .github/release-notes.sh > RELEASE.md
+          cat RELEASE.md
 
       - name: Upload release artifacts
         uses: ncipollo/release-action@v1
