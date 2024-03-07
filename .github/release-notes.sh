@@ -6,8 +6,7 @@ latest_tag=$(git describe --abbrev=0 --tags 2>/dev/null || echo "none")
 if [ "$latest_tag" != "none" ]; then
     commits=$(git log --oneline "$latest_tag"..)
 else
-    echo "No tags found, skipping release notes generation."
-    exit 1
+    commits=$(git log --oneline)
 fi
 
 # Generate list of unique commit messages with URLs
