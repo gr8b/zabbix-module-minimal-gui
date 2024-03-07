@@ -14,6 +14,11 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
+      - name: Prepare environment
+        run: |
+          sudo apt update
+          sudo apt install -y jq
+
       - name: Build release 5.0-6.2
         run: |
           version=${GITHUB_REF##*/}
