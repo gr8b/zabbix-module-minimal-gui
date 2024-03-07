@@ -39,7 +39,7 @@ jobs:
           zip -r "v${MODULE_VERSION}-zabbix-6.4-7.0.zip" manifest.json Module.php assets helpers actions views
 
       - name: Generate release notes
-        if: ${{ hashFiles('RELEASE_NOTES.md', '*-zabbix-6.4-7.0.zip', '*-zabbix-5.0-6.2.zip') != '' }}
+        if: ${{ hashFiles('RELEASE_NOTES.md') != '' && hashFiles('*-zabbix-6.4-7.0.zip', '*-zabbix-5.0-6.2.zip') != '' }}
         run: |
           chmod +x .github/release-notes.sh
           .github/release-notes.sh > RELEASE.md
