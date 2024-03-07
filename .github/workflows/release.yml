@@ -25,14 +25,14 @@ jobs:
           rm -rf *-zabbix-6.4-7.0.zip *-zabbix-5.0-6.2.zip
 
       - name: Build release for Zabbix 5.0 up to Zabbix 6.2
-        if: test -f manifest.5.0.json
+        if: ${{ shell('test -f manifest.5.0.json') }}
         run: |
           jq -s '.[0] * .[1]' manifest.json manifest.5.0.json > manifest.json
           jq ".version = \"${MODULE_VERSION}\"" manifest.json > manifest.json
           zip -r "v${MODULE_VERSION}-zabbix-5.0-6.2.zip" manifest.json Module.php public helpers actions views
 
       - name: Build release for Zabbix 6.4 and newer
-        if: test -f manifest.6.4.json
+        if: ${{ shell('test -f manifest.6.4.json') }}
         run: |
           jq -s '.[0] * .[1]' manifest.json manifest.6.4.json > manifest.json
           jq ".version = \"${MODULE_VERSION}\"" manifest.json > manifest.json
@@ -45,7 +45,7 @@ jobs:
           .github/release-notes.sh > RELEASE.md
 
       - name: Upload release artifacts
-        if: test -f *-zabbix-6.4-7.0.zip || test -f *-zabbix-5.0-6.2.zip
+        if: ${{ shell('test -f *-zabbix-6.4-7.0.zip || test -f *-zabbix-5.0-6.2.zip') }}
         uses: ncipollo/release-action@v1
         with:
           draft: true
