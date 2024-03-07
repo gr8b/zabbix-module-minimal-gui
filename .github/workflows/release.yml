@@ -16,33 +16,28 @@ jobs:
 
       - name: Build release 5.0-6.2
         run: |
-          jq '.manifest_version = 1' manifest.json > manifest.json
-          echo "creating file v${GITHUB_REF##*/}-zabbix-5.0-6.2.zip"
-          zip -r "v${GITHUB_REF##*/}-zabbix-5.0-6.2.zip" public Module.php manifest.json
+          version=${GITHUB_REF##*/}
+          jq -i ".manifest_version = 1" manifest.json
+          jq -i ".version = \"${version}\"" manifest.json
+          echo "creating file v${version}-zabbix-5.0-6.2.zip"
+          zip -r "v${version}-zabbix-5.0-6.2.zip" public Module.php manifest.json
 
       - name: Build release 6.4-7.0
         run: |
-          jq '.manifest_version = 2' manifest.json > manifest.json
-          echo "creating file v${GITHUB_REF##*/}-zabbix-6.4-7.0.zip"
-          zip -r "v${GITHUB_REF##*/}-zabbix-6.4-7.0.zip" assets Module.php manifest.json
+          version=${GITHUB_REF##*/}
+          jq -i ".manifest_version = 2" manifest.json
+          jq -i ".version = \"${version}\"" manifest.json
+          echo "creating file v${version}-zabbix-6.4-7.0.zip"
+          zip -r "v${version}-zabbix-6.4-7.0.zip" assets Module.php manifest.json
 
       - name: Generate release notes
         id: releasenotes
-        run: |
-          latest_tag=$(git describe --abbrev=0 --tags 2>/dev/null || echo "none")
-
-          if [ "$latest_tag" != "none" ]; then
-            commits=$(git log --oneline "$latest_tag"..)
-            printf -v escaped_commits "%q" "$commits"
-            echo "notes=$escaped_commits" >> $GITHUB_ENV
-          else
-            echo "No tags found, skipping release notes generation."
-            echo "notes=" >> $GITHUB_ENV
-          fi
+        run: ./github/release-notes.sh > RELEASE.md
 
       - name: Upload release artifacts
         uses: ncipollo/release-action@v1
         with:
+          draft: true
           tag: 1.1.1
-          body: "## Changes\n${{ steps.releasenotes.outputs.notes }}\n\n"
+          bodyFile: RELEASE.md
           artifacts: "*-zabbix-6.4-7.0.zip,*-zabbix-5.0-6.2.zip"
