@@ -32,7 +32,9 @@ jobs:
 
       - name: Generate release notes
         id: releasenotes
-        run: ./github/release-notes.sh > RELEASE.md
+        run: |
+          chmod +x .github/release-notes.sh
+          .github/release-notes.sh > RELEASE.md
 
       - name: Upload release artifacts
         uses: ncipollo/release-action@v1
