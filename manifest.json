@@ -1,5 +1,5 @@
 {
-    "manifest_version": 2,
+    "manifest_version": 1,
     "id": "tablecustomcss",
     "name": "Custom CSS for tables",
     "author": "",
@@ -7,7 +7,6 @@
     "version": "1.0",
     "namespace": "TablesCustomCss",
     "url": "",
-    "actions": {},
-    "assets": {}
+    "actions": {}
 }
 
