@@ -1,11 +1,11 @@
 #!/bin/bash
 
 script_dir=$(dirname "$(realpath "$0")")
-latest_tag=$(git describe --abbrev=0 --tags 2>/dev/null || echo "none")
+prev_tag=$(git describe --abbrev=0 --tags `git rev-list --tags --skip=1  --max-count=1`)
 base_url="https://github.com/${GITHUB_REPOSITORY}"
 
-if [ "$latest_tag" != "none" ]; then
-    commits=$(git log --oneline "$latest_tag"..)
+if [ "$prev_tag" != "none" ]; then
+    commits=$(git log --oneline "$prev_tag"..)
 else
     commits=$(git log --oneline)
 fi
