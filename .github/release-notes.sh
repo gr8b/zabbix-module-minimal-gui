@@ -30,8 +30,8 @@ while IFS= read -r commit; do
     fi
 done <<< "$commits"
 
-export version="$MODULE_VERSION"
-export name=$(jq -r '.name' manifest.json)
+export version=$(jq -r '.version' $script_dir/../manifest.json)
+export name=$(jq -r '.name' $script_dir/../manifest.json)
 export changes="$commit_list"
 
-envsubst < "$script_dir/templates/RELEASE_NOTES.md"
+envsubst < "$script_dir/../RELEASE_NOTES.md"
