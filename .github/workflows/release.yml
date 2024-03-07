@@ -39,14 +39,14 @@ jobs:
           zip -r "v${version}-zabbix-6.4-7.0.zip" manifest.json Module.php assets helpers actions views
 
       - name: Generate release notes
-        if: ${{ hashFiles('RELEASE_NOTES.md') != '' }}
+        if: ${{ hashFiles('RELEASE_NOTES.md', '*-zabbix-6.4-7.0.zip', '*-zabbix-5.0-6.2.zip') != '' }}
         run: |
           chmod +x .github/release-notes.sh
           .github/release-notes.sh > RELEASE.md
 
       - name: Upload release artifacts
         uses: ncipollo/release-action@v1
+        if: ${{ hashFiles('*-zabbix-6.4-7.0.zip', '*-zabbix-5.0-6.2.zip') != '' }}
         with:
-          tag: ${MODULE_VERSION}
           bodyFile: RELEASE.md
           artifacts: "*-zabbix-6.4-7.0.zip,*-zabbix-5.0-6.2.zip"

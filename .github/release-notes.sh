@@ -2,6 +2,7 @@
 
 script_dir=$(dirname "$(realpath "$0")")
 latest_tag=$(git describe --abbrev=0 --tags 2>/dev/null || echo "none")
+version=${latest_tag#v}
 base_url="https://github.com/${GITHUB_REPOSITORY}"
 
 if [ "$latest_tag" != "none" ]; then
@@ -30,7 +31,7 @@ while IFS= read -r commit; do
     fi
 done <<< "$commits"
 
-export version="$latest_tag"
+export version="$version"
 export name=$(jq -r '.name' manifest.json)
 export changes="$commit_list"
 
