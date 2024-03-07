@@ -34,6 +34,6 @@ export version=$(jq -r '.version' $script_dir/../manifest.json)
 export name=$(jq -r '.name' $script_dir/../manifest.json)
 export changes="$commit_list"
 
-echo "name=$name   version=$version"
+cat $script_dir/../manifest.json
 
 envsubst < "$script_dir/../RELEASE_NOTES.md"
