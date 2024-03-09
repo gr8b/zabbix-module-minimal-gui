@@ -21,7 +21,8 @@ jobs:
           echo "VERSION_TAG=${VERSION_TAG}" >> "$GITHUB_ENV"
 
       - name: Push tag
+        uses: tvdias/github-tagger@v0.0.1
         if: env.VERSION_TAG != ''
-        run: |
-          git tag -a $VERSION_TAG -m 'Version ${VERSION_TAG}'
-          git push origin $VERSION_TAG
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          tag: "$VERSION_TAG"
