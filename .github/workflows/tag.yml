@@ -1,0 +1,27 @@
+name: Create tag
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Calculate version tag
+        run: |
+          chmod +x .github/version-tag.sh
+          VERSION_TAG=$(.github/version-tag.sh)
+          echo "VERSION_TAG=${VERSION_TAG}" >> "$GITHUB_ENV"
+
+      - name: Push tag
+        if: env.VERSION_TAG != ''
+        run: |
+          git tag -a $VERSION_TAG -m 'Version ${VERSION_TAG}'
+          git push origin $VERSION_TAG
