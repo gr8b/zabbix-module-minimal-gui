@@ -1,3 +1,20 @@
+## Manual builds
+
+To create release manually `GH_TAG_PUSH` secret should be created on repository level. `GH_TAG_PUSH` should contain personal access token with permissions:
+
+- `repo`:
+  - `repo:status`
+  - `repo_deployment`
+  - `public_repo`
+
+To create PAT token go to *Settings ⇒ Developers ⇒ Personal access tokens ⇒ Tokens (classic)*. \
+Once the token is generated, copy it and go to repository *Settings ⇒ Secrets and variables ⇒ Actions* and create new repository secret with name `GH_TAG_PUSH` with value of generated PAT. \
+When secret is added can go to repository *Actions* and run *Create tag*, action will check main branch commits and push new release tag.
+
+Tag will be generated using module version from `manifest.json` and checking commits till previous tag: \
+`MINOR` version number will be increased when at least one commit with prefix `feat:` exists, also `PATCH` number will be set to 0. \
+`PATCH` version number will be increased when at least one commit with prefix `fix:` exists.
+
 ## Automatic builds
 
 An automatic build will be triggered upon the push of a tag.
